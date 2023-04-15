@@ -10,7 +10,7 @@ const player = {
   y: canvas.height / 2 - paddleHeight / 2,
   width: paddleWidth,
   height: paddleHeight,
-  dy: 4
+  dy: 0
 };
 
 const computer = {
@@ -18,7 +18,7 @@ const computer = {
   y: canvas.height / 2 - paddleHeight / 2,
   width: paddleWidth,
   height: paddleHeight,
-  dy: 4
+  dy: 0
 };
 
 const ball = {
@@ -43,12 +43,16 @@ function movePaddles() {
   player.y += player.dy;
   computer.y += computer.dy;
 
-  if (player.y < 0 || player.y + player.height > canvas.height) {
-    player.dy *= -1;
+  if (player.y < 0) {
+    player.y = 0;
+  } else if (player.y + player.height > canvas.height) {
+    player.y = canvas.height - player.height;
   }
 
-  if (computer.y < 0 || computer.y + computer.height > canvas.height) {
-    computer.dy *= -1;
+  if (computer.y < 0) {
+    computer.y = 0;
+  } else if (computer.y + computer.height > canvas.height) {
+    computer.y = canvas.height - computer.height;
   }
 }
 
@@ -97,5 +101,27 @@ function gameLoop() {
   draw();
   requestAnimationFrame(gameLoop);
 }
+
+document.addEventListener("keydown", (event) => {
+  if (event.code === "KeyQ") {
+    player.dy = -4;
+  } else if (event.code === "KeyA") {
+    player.dy = 4;
+  }
+  if (event.code === "KeyO") {
+    computer.dy = -4;
+  } else if (event.code === "KeyL") {
+    computer.dy = 4;
+  }
+});
+
+document.addEventListener("keyup", (event) => {
+  if (event.code === "KeyQ" || event.code === "KeyA") {
+    player.dy = 0;
+  }
+  if (event.code === "KeyO" || event.code === "KeyL") {
+    computer.dy = 0;
+  }
+});
 
 gameLoop();
